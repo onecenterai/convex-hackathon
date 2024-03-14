@@ -17,7 +17,8 @@ def login():
     if not user.check_password(data.get('password')):
         return jsonify({'message': 'Wrong password'}), 401
     # generate token
-    token = user.generate_token()
+    token = str(user.generate_token())
+    #print('\n\n', type(str(token)), type(UserSchema().dump(user)), '\n\n')
     return jsonify({'token': token, 'user': UserSchema().dump(user)}), 200
 
 @bp.patch('/reset-password')

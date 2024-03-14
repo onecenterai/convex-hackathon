@@ -1,1 +1,1 @@
-PYTHONDONTWRITEBYTECODE=0 FLASK_APP=main flask run -p 5552 --debug --no-reload
+PYTHONDONTWRITEBYTECODE=0 FLASK_APP=main flask run -p 5552 --debug --reload

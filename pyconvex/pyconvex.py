@@ -4,7 +4,7 @@ from convex import ConvexClient
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
-from convex_retriever import ConvexDocStore
+from pyconvex.convex_retriever import ConvexDocStore
 from langchain.document_loaders import PyPDFLoader
 from langchain.tools import Tool
 from langchain.agents import initialize_agent
@@ -13,7 +13,6 @@ from langchain.schema import HumanMessage, AIMessage
 from langchain.docstore.document import Document
 import multiprocessing
 import copy
-
 
 
 load_dotenv()
@@ -68,10 +67,8 @@ def parallel_vectorize(pages, embeddings):
 
 
 
-def query_doc(query, company_name):
-    # embeds = embeddings.embed_query(query)
-    # as_output = client.action("docs:doc_search", args={'query_embedding':embeds, 'company_name':company_name})
-    history = []
+def query_doc(query, company_name, history = []):
+    
     docstore = ConvexDocStore(index=company_name, embeddings=embeddings, convex_url=os.getenv('CONVEX_URL'))
     retriever = docstore.as_retriever()
     llm = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"))
@@ -80,8 +77,8 @@ def query_doc(query, company_name):
 
     system_message = f"""
             "You are a helpful HR representative."
-            "You provide assistant to  vectara employees about Vectara Inc."
-            "information about Vectara Inc can be accessed using the `vectara employee guide book` tool"
+            "You provide assistant to  {company_name} employees and/or customers about {company_name} Inc."
+            "information about {company_name} Inc can be accessed using the `{company_name} guide book` tool"
             "You can ask questions to help you understand and diagnose the problem."
             "If you are unsure of how to help, you can suggest the client to go to the HR Admin office."
             "Try to sound as human as possible"
@@ -89,9 +86,9 @@ def query_doc(query, company_name):
             """
     tools = [
         Tool(
-            name=f"vectara employee guide book",
+            name=f"{company_name} guide book",
             func=qa.run,
-            description=f"Useful when you need to answer vectara employees questions",
+            description=f"Useful when you need to answer {company_name} employees and/or customers questions",
         )
     ]
 
@@ -114,18 +111,5 @@ def query_doc(query, company_name):
 
     return executor.run(input=q, chat_history=chat_history)
 
-def test():
-    embeds = embeddings.embed_query('can you please tell me about the onsite mini zoo')
-    as_output = client.action("docs:doc_search", args={'query_embedding':embeds, 'company_name':'ACME'})
-    
-        
-    return [Document(page_content=d.get('content'), metadata={'id':d.get('_id'), 'score':d.get('_score')}) for d in as_output]
-
-if __name__ == '__main__':
-    # upload_document('/home/g1f7/Documents/data/vectara_employee_handbook.pdf', 'test1', 'ACME', 'this is a test doc')
-    # print(len(get_all_documents()))
-    a = query_doc(query='can you please tell me about the onsite mini zoo?', company_name='ACME')
-    print(a)
-    # print(test())
     
 
