@@ -9,8 +9,6 @@ from app.review.model import Review
 from helpers.langchain import qa_chain
 from helpers.openai import transcribe, rewrite
 
-from helpers.vectara.create_corpus import create_corpus
-
 
 
 @celery.task
@@ -36,43 +34,10 @@ def create_transcript(review_id, transient_audio_file=None):
 
 @celery.task
 def start_training(resource_id):
-    # try:
-        
-    #     resource = Resource.get_by_id(resource_id)
-    #     partner = Partner.get_by_id(resource.partner_id)
-    #     resource.update(training_status = 'pending')
-
-    #     if not partner.corpus_id:
-    #         r = create_corpus(partner.identity, partner.name)
-    #         if r[1]:
-    #             partner.update(corpus_id=r[0].json().get('corpusId'))
-    #         else:
-    #             return "Resource Training Could Not Be Intialized Successfully!"
-        
-    #     train_with_resource(resource.url, partner.identity)
-    #     resource.update(training_status = 'complete')
-    #     return "Resource Training Completed Successfully!"
-    # except Exception as e:
-    #     print(e)
-    #     resource.update(training_status = 'failed')
-    #     return "Resource Training Could Not Be Intialized Successfully!"
     return True
 
 @celery.task
 def undo_training(resource_id):
-    # try:
-        
-    #     resource = Resource.get_by_id(resource_id)
-    #     partner = Partner.get_by_id(resource.partner_id)
-    #     resource.update(training_status = 'pending')
-        
-    #     delete_resource(resource.url, partner.identity)
-    #     resource.delete()
-    #     return "Resource Deleted Successfully!"
-    # except Exception as e:
-    #     print(e)
-    #     db.session.rollback()
-    #     return "Resource could not be deleted!"
     return True
 
 @celery.task
