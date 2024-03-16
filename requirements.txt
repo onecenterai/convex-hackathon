@@ -93,11 +93,6 @@ jsonschema-specifications==2023.11.2
 kiwisolver==1.4.5
 kombu==5.2.4
 langchain==0.0.292
-langchain-community==0.0.15
-langchain-core==0.1.17
-langchain-google-genai==0.0.5
-langchain-openai==0.0.5
-langchainhub==0.1.14
 langsmith==0.0.37
 llama-index==0.9.19
 loguru==0.7.2
