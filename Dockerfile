@@ -18,6 +18,9 @@ COPY . .
 ARG DATABASE_URI
 ENV DATABASE_URI=${DATABASE_URI}
 
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+RUN apt-get install -y nodejs
+
 RUN flask db upgrade
 
 RUN python manage.py
