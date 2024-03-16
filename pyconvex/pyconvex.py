@@ -17,7 +17,7 @@ import copy
 
 load_dotenv()
 client = ConvexClient(os.getenv('CONVEX_URL'))
-ak = os.getenv("OPENAI_API_KEY")
+ak = os.getenv('OPENAI_API_KEY')
 print(f'\n\nak: {ak}\n\n')
 embeddings = OpenAIEmbeddings(openai_api_key=ak)
 
