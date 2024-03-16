@@ -150,7 +150,7 @@ pydantic==1.10.7
 pydantic_core==2.14.5
 pydeck==0.8.1b0
 Pygments==2.15.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 pymdown-extensions==10.5
 pyparsing==3.1.1
 pypdf==3.16.0
