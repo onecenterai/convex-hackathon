@@ -94,7 +94,6 @@ kiwisolver==1.4.5
 kombu==5.2.4
 langchain==0.0.292
 langsmith==0.0.37
-llama-index==0.9.19
 loguru==0.7.2
 lxml==4.9.3
 Mako==1.2.4
