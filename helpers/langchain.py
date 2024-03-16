@@ -1,4 +1,4 @@
-from pyconvex.pyconvex import query_doc
+from pyconvex.pyconvex_main import query_doc
 
 from app.partner.model import Partner
 

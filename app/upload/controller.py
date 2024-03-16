@@ -22,7 +22,7 @@ from helpers.upload import (do_upload, remove_upload,
                             #create_corpus_api_key
                             )
 
-from pyconvex.pyconvex import upload_document
+from pyconvex.pyconvex_main import upload_document
 
 import requests
 
