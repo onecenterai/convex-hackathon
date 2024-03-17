@@ -15,7 +15,7 @@ import multiprocessing
 import copy
 
 
-load_dotenv()
+
 convex_url = os.getenv('CONVEX_URL')
 open_ai_key = os.getenv('OPENAI_API_KEY')
 
