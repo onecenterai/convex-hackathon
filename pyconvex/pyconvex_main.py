@@ -16,8 +16,13 @@ import copy
 
 
 load_dotenv()
-client = ConvexClient(os.getenv('CONVEX_URL'))
-embeddings = OpenAIEmbeddings(openai_api_key=os.getenv('OPENAI_API_KEY'))
+convex_url = os.getenv('CONVEX_URL')
+open_ai_key = os.getenv('OPENAI_API_KEY')
+
+print(convex_url, open_ai_key)
+
+client = ConvexClient(address=convex_url)
+embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
 
 def get_all_documents():
     res = client.query("docs:get")
