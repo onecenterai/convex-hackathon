@@ -19,9 +19,6 @@ import copy
 convex_url = os.getenv('CONVEX_URL')
 open_ai_key = os.getenv('OPENAI_API_KEY')
 
-print(os.environ)
-print(convex_url, open_ai_key)
-
 client = ConvexClient(address=convex_url)
 embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
 

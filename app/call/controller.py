@@ -7,7 +7,7 @@ from app.call.schema import *
 from app.user.model import User
 from helpers.langchain import qa_chain
 from helpers.openai import qa
-from helpers.vectara.query import query
+#from helpers.vectara.query import query
 
 bp = Blueprint('call', __name__, template_folder='templates')
 
