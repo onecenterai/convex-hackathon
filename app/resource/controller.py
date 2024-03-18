@@ -7,6 +7,8 @@ from app.partner.model import Partner
 from app.resource.model import *
 from app.resource.schema import *
 
+from pyconvex.pyconvex_main import upload_document
+
 bp = Blueprint('resource', __name__)
 
 @bp.post('/resource')
@@ -62,7 +64,6 @@ def get_resources():
 @auth_required('agentadmin')
 def train_model_with_resource(id):
     p = Partner.get_by_id(g.user.agent.partner_id)
-    uploader = g.user.name
     resource = Resource.get_by_id(id)
     if resource is None:
         return {'message': 'Resource not found'}, 404
@@ -71,6 +72,7 @@ def train_model_with_resource(id):
     elif resource.training_status == 'processing':
         return {'message': 'Resource training in progress'}, 404
     # start resource training here
-    start_training.delay(resource.id, p.name, uploader)
+    #start_training.delay(resource.id, p.name)
+    res = upload_document(file=resource.url, name=f'{p.name} document', description=resource.description, company_name=p.name)
     resource.training_status == 'processing'
     return {'message': 'Resource training initialized successfully'}, 200

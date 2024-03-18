@@ -35,9 +35,8 @@ def create_transcript(review_id, transient_audio_file=None):
         return "Review Could Not Be Generated Successfully!"
 
 @celery.task
-def start_training(resource_id, name, uploader):
+def start_training(resource_id, name):
     file = Resource.get_by_id(resource_id)
-    d = f'Document for {name} uploaded by {uploader}'
     if file:
         res = upload_document(file=file.url, name=f'{name} document', description=file.description, company_name=name)
         if res:
