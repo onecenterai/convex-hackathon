@@ -6,6 +6,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 from pyconvex.convex_retriever import ConvexDocStore
 from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import OnlinePDFLoader
 from langchain.tools import Tool
 from langchain.agents import initialize_agent
 from langchain.agents.types import AgentType
@@ -30,7 +31,7 @@ def upload_document(file, name, company_name, description):
     #embed document
     #pass embeddings into function >:)
     
-    loader = PyPDFLoader(file)
+    loader = OnlinePDFLoader(file)
     w_pages = loader.load_and_split()
     pages = copy.deepcopy(w_pages)
     pages = parallel_vectorize(pages, embeddings)    
@@ -44,6 +45,9 @@ def upload_document(file, name, company_name, description):
                                                  'embeddings':pages[i].page_content})
     
     return True
+
+def delete_resource(company_name):
+    ...
 
 def vectorize(embeddings, page_content, result_queue):
         vectors = embeddings.embed_query(page_content)

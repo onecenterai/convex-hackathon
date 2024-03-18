@@ -2,6 +2,7 @@ from flask import Blueprint, g, request
 from app.agent.model import Agent
 from app.celery.tasks import start_training, undo_training
 from app.route_guard import auth_required
+from app.partner.model import Partner
 
 from app.resource.model import *
 from app.resource.schema import *
@@ -60,6 +61,8 @@ def get_resources():
 @bp.post('/resource/<int:id>/train')
 @auth_required('agentadmin')
 def train_model_with_resource(id):
+    p = Partner.get_by_id(g.user.agent.partner_id)
+    uploader = g.user.name
     resource = Resource.get_by_id(id)
     if resource is None:
         return {'message': 'Resource not found'}, 404
@@ -68,6 +71,6 @@ def train_model_with_resource(id):
     elif resource.training_status == 'processing':
         return {'message': 'Resource training in progress'}, 404
     # start resource training here
-    start_training.delay(resource.id)
+    start_training.delay(resource.id, p.name, uploader)
     resource.training_status == 'processing'
     return {'message': 'Resource training initialized successfully'}, 200

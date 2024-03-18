@@ -22,7 +22,7 @@ from helpers.upload import (do_upload, remove_upload,
                             #create_corpus_api_key
                             )
 
-from pyconvex.pyconvex_main import upload_document
+
 
 import requests
 
@@ -31,16 +31,14 @@ bp = Blueprint('upload', __name__, url_prefix='/upload')
 @bp.post('/add')
 @auth_required()
 def add():
+
     file = request.files.get('file')
-    p = Partner.get_by_id(g.user.agent.partner_id)
-    d = f'Document for {p.name} uploaded by {g.user.name}'
     if file:
-        res = upload_document(file=file, name=f'{p.name} document', description=d, company_name=p.name)
-        if res:
-             return {'message': 'File uploaded successfully'}
+        url = do_upload(file)
+        if url:
+            return {'url': url, 'message': 'File uploaded successfully'}
         return {'error': 'Error uploading file'}
     return {'error': 'No file to upload'}
-
 
 @bp.delete('/remove/<file_to_remove>')
 @auth_required()

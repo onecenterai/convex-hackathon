@@ -5,9 +5,11 @@ from app.call.model import Call, Response
 from app.partner.model import Partner
 from app.resource.model import Resource
 
+
 from app.review.model import Review
 from helpers.langchain import qa_chain
 from helpers.openai import transcribe, rewrite
+from pyconvex.pyconvex_main import upload_document, delete_resource
 
 
 
@@ -33,12 +35,32 @@ def create_transcript(review_id, transient_audio_file=None):
         return "Review Could Not Be Generated Successfully!"
 
 @celery.task
-def start_training(resource_id):
-    return True
+def start_training(resource_id, name, uploader):
+    file = Resource.get_by_id(resource_id)
+    d = f'Document for {name} uploaded by {uploader}'
+    if file:
+        res = upload_document(file=file, name=f'{name} document', description=d, company_name=name)
+        if res:
+              return {'message': 'File uploaded successfully'}
+        return {'error': 'Error uploading file'}
+    return {'error': 'No file to upload'}
+    
 
 @celery.task
 def undo_training(resource_id):
-    return True
+    try:
+        
+        resource = Resource.get_by_id(resource_id)
+        partner = Partner.get_by_id(resource.partner_id)
+        resource.update(training_status = 'pending')
+        
+        delete_resource(partner.name)
+        resource.delete()
+        return "Resource Deleted Successfully!"
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return "Resource could not be deleted!"
 
 @celery.task
 def do_long_call(user_id, session_id, question, partner_id):
