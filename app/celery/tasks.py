@@ -39,7 +39,7 @@ def start_training(resource_id, name, uploader):
     file = Resource.get_by_id(resource_id)
     d = f'Document for {name} uploaded by {uploader}'
     if file:
-        res = upload_document(file=file, name=f'{name} document', description=d, company_name=name)
+        res = upload_document(file=file.url, name=f'{name} document', description=file.description, company_name=name)
         if res:
               return {'message': 'File uploaded successfully'}
         return {'error': 'Error uploading file'}
