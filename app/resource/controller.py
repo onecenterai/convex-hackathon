@@ -82,6 +82,6 @@ def train_model_with_resource(id):
         return {'message': 'Resource training in progress'}, 404
     # start resource training here
     #start_training.delay(resource.id, p.name)
-    res = upload_document(file=resource.url, name=p.title, description=resource.description, company_name=p.name)
+    res = upload_document(file=resource.url, name=resource.title, description=resource.description, company_name=p.name)
     resource.training_status == 'complete'
     return {'message': 'Resource training completed Successfully successfully'}, 200
