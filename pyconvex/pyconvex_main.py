@@ -120,6 +120,5 @@ def delete_resource(company_name, doc_name):
     res = client.query("docs:getCompanyIds", args={'company_name': company_name, 'name': doc_name})
     for i in res:
         res_2 = client.action("docs:doDelete", args={'id': i.get('_id')})
-    return res
+    return True
     
-

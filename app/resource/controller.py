@@ -1,6 +1,6 @@
 from flask import Blueprint, g, request
 from app.agent.model import Agent
-from app.celery.tasks import start_training, undo_training
+#from app.celery.tasks import start_training, undo_training
 from app.route_guard import auth_required
 from app.partner.model import Partner
 
@@ -8,6 +8,7 @@ from app.resource.model import *
 from app.resource.schema import *
 
 from pyconvex.pyconvex_main import upload_document
+from pyconvex.pyconvex_main import delete_resource as convex_resource_delete
 
 bp = Blueprint('resource', __name__)
 
@@ -47,10 +48,18 @@ def update_resource(id):
 @auth_required('agentadmin')
 def delete_resource(id):
     resource = Resource.get_by_id(id)
+    p = Partner.get_by_id(g.user.agent.partner_id)
+
     if resource is None:
         return {'message': 'Resource not found'}, 404
-    undo_training.delay(resource.id)
-    return {'message': 'Resource Scheduled for Removal'}, 200
+    # undo_training.delay(resource.id)
+    
+    res = convex_resource_delete(company_name=p.name, doc_name=resource.title)
+    if res:
+        resource.delete()
+        return {'message': 'Resource Deleted'}, 200
+    else:
+        return {'message': 'Error Deleting Resource'}
 
 @bp.get('/resources')
 @auth_required('agentadmin')
@@ -73,6 +82,6 @@ def train_model_with_resource(id):
         return {'message': 'Resource training in progress'}, 404
     # start resource training here
     #start_training.delay(resource.id, p.name)
-    res = upload_document(file=resource.url, name=f'{p.name} document', description=resource.description, company_name=p.name)
+    res = upload_document(file=resource.url, name=p.title, description=resource.description, company_name=p.name)
     resource.training_status == 'complete'
     return {'message': 'Resource training completed Successfully successfully'}, 200
