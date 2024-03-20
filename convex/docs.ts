@@ -56,12 +56,44 @@ export const insertRow = internalMutation({
     },
   });
 
+export const doDelete = action({
+  args: {
+    id: v.id("documents")
+  },
+  handler: async (ctx, args) => {
+    const r = {
+      id: args.id
+    }
+    await ctx.runMutation(internal.docs.deleteRow, r)
+  }
+})
+
+export const deleteRow = internalMutation({
+  args: {
+    id: v.id("documents")
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.id)
+  }
+})
+
 export const get = query({
     handler: async ({ db }) => {
       return await db.query("documents").collect();
       
     },
   });
+
+export const getCompanyIds = query({
+    args: {
+      company_name: v.string(),
+      name: v.string()
+    },
+    handler: async (ctx, args) => {
+      return await ctx.db.query("documents").filter((q) => q.and(q.eq(q.field("company_name"), args.company_name), q.eq(q.field("name"), args.name))).collect();
+    },
+  });
+
 
 export const get_vector_id = query({
     args: { name: v.string(), company_name: v.string() },

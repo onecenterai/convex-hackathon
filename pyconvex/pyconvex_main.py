@@ -38,16 +38,13 @@ def upload_document(file, name, company_name, description):
     
     
     for i in range(len(w_pages)):
-        res = client.action("docs:insert", args={'name':f'{name}_{i}', 
+        res = client.action("docs:insert", args={'name':f'{name}', 
                                                  'company_name':company_name, 
                                                  'description':description, 
                                                  'content':w_pages[i].page_content, 
                                                  'embeddings':pages[i].page_content})
     
     return True
-
-def delete_resource(company_name):
-    ...
 
 def vectorize(embeddings, page_content, result_queue):
         vectors = embeddings.embed_query(page_content)
@@ -119,5 +116,10 @@ def query_doc(query, company_name, history = []):
 
     return executor.run(input=q, chat_history=chat_history)
 
+def delete_resource(company_name, doc_name):
+    res = client.query("docs:getCompanyIds", args={'company_name': company_name, 'name': doc_name})
+    for i in res:
+        res_2 = client.action("docs:doDelete", args={'id': i.get('_id')})
+    return res
     
 
